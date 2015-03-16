@@ -15,6 +15,44 @@
 
 @implementation Tests
 
+-(void)testValidation
+{
+    NSDictionary *json = @{@"room_id": @2161,
+                           @"data": @{
+                                   @"ticket_id": @2161,
+                                   @"room_jid": @"1_022415_115616_qatest23_qatest23_general_questi@conf.hipchat-dev.healthjoy.com",
+                                   @"topic": @"General Question",
+                                   @"user_full_name": @"Qatest23 Qatest23 (id 218)",
+                                   @"last_read_timestamp": @0
+                                   },
+                           @"type": @"room"};
+    
+    NSDictionary *scheme = @{@"type": @"object",
+                             @"properties": @{
+                                     @"data": @{@"type": @"object",
+                                                @"properties": @{
+                                                        @"ticket_id": @{@"anyOf": @[@{@"type": @"number"},@{@"type": @"string"}]},
+                                                        @"room_jid": @{@"type": @"string"},
+                                                        @"topic": @{@"type": @"string"},
+                                                        @"user_full_name": @{@"type": @"string"},
+                                                        @"last_read_timestamp": @{@"type": @"number"}
+                                                        }
+                                                },
+                                     @"room_id": @{@"anyOf":@[@{@"type": @"number"},
+                                                              @{@"type": @"string"}
+                                                              ]
+                                                   },
+                                     @"type": @{@"type": @"string"}
+                                     }
+                             };
+    
+    KiteJSONValidator * validator = [KiteJSONValidator new];
+    
+    NSError *error;
+    error = [validator validateJSONInstance:json withSchema:scheme];
+    XCTAssertNil(error);
+}
+
 - (void)testDraft4Suite
 {
     NSBundle * mainBundle = [NSBundle bundleForClass:[self class]];
